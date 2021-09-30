@@ -3,9 +3,10 @@ import PropTypes from "prop-types";
 import s from "./ContactList.module.css";
 
 const ContactList = ({ getOnHandleFilter, onDeleteContact }) => {
+  // console.log(getOnHandleFilter);
   return (
     <ul className={s.menu}>
-      {getOnHandleFilter().map((contact) => (
+      {getOnHandleFilter.map((contact) => (
         <li className={s.list} key={contact.id}>
           <span>{contact.name}: </span>
           <span>{contact.number}</span>
@@ -24,7 +25,7 @@ const ContactList = ({ getOnHandleFilter, onDeleteContact }) => {
 };
 
 ContactList.propTypes = {
-  getOnHandleFilter: PropTypes.func.isRequired,
+  getOnHandleFilter: PropTypes.array.isRequired,
   onDeleteContact: PropTypes.func.isRequired,
 };
 

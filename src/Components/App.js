@@ -28,10 +28,12 @@ class App extends Component {
   };
   onHandleFilter = (e) => {
     this.setState({ filter: e.target.value });
-    console.log(e.target.value);
   };
   isContactExist = (name) =>
-    this.state.contacts.some((contact) => contact.name === name);
+    this.state.contacts.some(
+      (contact) => contact.name.toLowerCase() === name.toLowerCase()
+    );
+
   getOnHandleFilter = () =>
     this.state.contacts.filter((contact) =>
       contact.name.toLowerCase().includes(this.state.filter.toLowerCase())
@@ -53,9 +55,12 @@ class App extends Component {
 
         <h2>Contacts</h2>
 
-        <Filter onHandleFilter={this.onHandleFilter} />
+        <Filter
+          onHandleFilter={this.onHandleFilter}
+          filter={this.state.filter}
+        />
         <ContactList
-          getOnHandleFilter={this.getOnHandleFilter}
+          getOnHandleFilter={this.getOnHandleFilter()}
           onDeleteContact={this.onDeleteContact}
         />
       </>
