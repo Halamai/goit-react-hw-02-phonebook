@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import s from "./ContactList.module.css";
 
 const ContactList = ({ getOnHandleFilter, onDeleteContact }) => {
+  // console.log(getOnHandleFilter);
   return (
     <ul className={s.menu}>
       {getOnHandleFilter.map((contact) => (

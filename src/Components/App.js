@@ -48,6 +48,7 @@ class App extends Component {
   onHandleFilter = (e) => {
     this.setState({ filter: e.target.value });
   };
+  // console.log(e);
   isContactExist = (name) =>
     this.state.contacts.some(
       (contact) => contact.name.toLowerCase() === name.toLowerCase()
