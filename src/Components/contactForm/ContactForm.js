@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import s from "./ContactForm.module.css";
+import axios from "axios";
 
 class ContactForm extends Component {
   state = {
+    // contacts: [],
     name: "",
     number: "",
   };
@@ -15,9 +17,18 @@ class ContactForm extends Component {
 
   onHandleSubmit = (e) => {
     e.preventDefault();
-    const addNewContact = { name: this.state.name, number: this.state.number };
-    this.props.addContact(addNewContact);
-    this.reset();
+    axios
+      .post(
+        "https://reactdz3-default-rtdb.firebaseio.com/contacts.json",
+        this.state
+      )
+      .then((res) =>
+        this.props.addContact({ ...this.state, id: res.data.name })
+      )
+      .catch((err) => console.log(err))
+      .finally(() => {
+        this.reset();
+      });
   };
 
   reset = () => {

@@ -1,3 +1,4 @@
+// import axios from "axios";
 import React, { Component } from "react";
 
 import { v4 as uuidv4 } from "uuid";
@@ -7,14 +8,32 @@ import Filter from "./filter/Filter";
 
 class App extends Component {
   state = {
-    contacts: [
-      { id: "id-1", name: "Rosie Simpson", number: "459-12-56" },
-      { id: "id-2", name: "Hermione Kline", number: "443-89-12" },
-      { id: "id-3", name: "Eden Clements", number: "645-17-79" },
-      { id: "id-4", name: "Annie Copeland", number: "227-91-26" },
-    ],
+    contacts: [],
     filter: "",
   };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem("contacts", JSON.stringify(this.state.contacts));
+    }
+  }
+  componentDidMount = () => {
+    const savedState = localStorage.getItem("contacts");
+    const parsedState = JSON.parse(savedState);
+    return parsedState;
+  };
+
+  // componentDidMount = () => {
+  //   axios
+  //     .get("https://reactdz3-default-rtdb.firebaseio.com/contacts.json")
+  //     .then((res) => {
+  //       if (res.data) {
+  //         const keys = Object.keys(res.data);
+  //         const contacts = keys.map((key) => ({ id: key, ...res.data[key] }));
+  //         this.setState({ contacts });
+  //       }
+  //     });
+  // };
 
   addContact = (addNewContact) => {
     if (this.isContactExist(addNewContact.name))
@@ -28,10 +47,11 @@ class App extends Component {
   };
   onHandleFilter = (e) => {
     this.setState({ filter: e.target.value });
-    console.log(e.target.value);
   };
   isContactExist = (name) =>
-    this.state.contacts.some((contact) => contact.name === name);
+    this.state.contacts.some(
+      (contact) => contact.name.toLowerCase() === name.toLowerCase()
+    );
   getOnHandleFilter = () =>
     this.state.contacts.filter((contact) =>
       contact.name.toLowerCase().includes(this.state.filter.toLowerCase())
@@ -39,10 +59,19 @@ class App extends Component {
 
   onDeleteContact = (e) => {
     const id = e.target.id;
-
     this.setState((prev) => ({
       contacts: prev.contacts.filter((contact) => contact.id !== id),
     }));
+
+    // axios
+    //   .delete(
+    //     `https://reactdz3-default-rtdb.firebaseio.com/contacts/${id}.json`
+    //   )
+    //   .then(() => {
+    //     this.setState((prev) => ({
+    //       contacts: prev.contacts.filter((contact) => contact.id !== id),
+    //     }));
+    //   });
   };
 
   render() {
@@ -53,9 +82,12 @@ class App extends Component {
 
         <h2>Contacts</h2>
 
-        <Filter onHandleFilter={this.onHandleFilter} />
+        <Filter
+          onHandleFilter={this.onHandleFilter}
+          filter={this.state.filter}
+        />
         <ContactList
-          getOnHandleFilter={this.getOnHandleFilter}
+          getOnHandleFilter={this.getOnHandleFilter()}
           onDeleteContact={this.onDeleteContact}
         />
       </>
